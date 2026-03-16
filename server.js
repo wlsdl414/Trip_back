@@ -33,22 +33,26 @@ app.get('/test', (req, res) => {
     res.json({ message: "개발 프로젝트 백엔드 연결 성공!", data: "이것은 서버 데이터입니다." });
 });
 
-app.get('/login/:id/:pw', function(req, res) {
-    const id = req.params.id;
-    const pw = req.params.pw;
+app.post('/user/signin', function(req, res) {
+    const id = req.body.id;
+    const pw = req.body.password;
+
+    console.log("로그인 시도", id, pw);
+
     if (id && pw) {
         const user = userdata.find(user => user.id === id && user.pw === pw);
 
         if (user) {
-            res.send({ 
+            return res.status(200).send({ 
                 "ok": true,
-                user : {id: user.id, name : user.name, pw : user.pw, age : user.age}
+                "status": 200,
+                "data" : {id: user.id, name: user.name }
             });
         } else {
-            res.send({ "ok": false});
+            return res.status(401).send({ "ok" : false, "message" : "아이디 또는 비밀번호가 틀렸습니다."})
         }
     } else {
-        res.send({ "ok": false});
+        return res.status(400).send({ "ok": false, "message": "모두 입력해주세요."});
     }
 });
 
@@ -77,3 +81,4 @@ app.post('/user/signup', function(req, res) {
 
     res.send({"ok":true, "message":"회원가입 성공"});
 });
+
