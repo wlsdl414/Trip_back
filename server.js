@@ -3,9 +3,13 @@ const cors = require('cors');
 const app = express()
 const port = 8080
 
+const UserInfo = require('./data/UserInfo');
+
 let userdata = [
     { id: 'test', pw: 'test', name: '송유진', age: '22' },
+    ...UserInfo
 ];
+
 
 app.use(express.json())
 app.use(cors());
@@ -15,9 +19,7 @@ app.get('/', (req, res) => {
     res.send("백엔드연결")
 })
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+
 
 app.get('/api/users', (req, res) => {
     res.json(userdata); // JSON 형식으로 데이터 응답
@@ -57,7 +59,7 @@ app.post('/user/signin', function(req, res) {
 });
 
 app.post('/user/signup', function(req, res) {
-    const { id, password, name } = req.body;
+    const { id, password, name, age } = req.body;
     console.log("들어온 아이디:", id);
 
     const user = userdata.find(user => user.id === id);
@@ -74,11 +76,18 @@ app.post('/user/signup', function(req, res) {
         id: id,
         pw : password,
         name : name,
-        age : '20'
+        age : age || '알 수없음'
     });
 
     console.log("현재 전체 유저 목록:", userdata);
 
     res.send({"ok":true, "message":"회원가입 성공"});
+});
+
+app.listen(port, () => {
+    console.log(`=================================`);
+    console.log(`서버가 ${port}번 포트에서 정상 실행 중입니다!`);
+    console.log(`주소 확인: http://localhost:${port}/api/users`);
+    console.log(`=================================`);
 });
 
