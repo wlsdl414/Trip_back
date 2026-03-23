@@ -8,11 +8,12 @@ const port = 8080;
 app.use(express.json());
 app.use(cors());
 
-app.get('/', (req, res) => res.send("백엔드 연결 완료"));
-app.get('/test', (req, res) => res.json({ message: "연결 성공!" }));
+app.use('/api', userRoutes);
 
-app.use('/', userRoutes); 
+app.get('/', (req, res) => {
+    res.send("백엔드 연결 완료");
+});
 
 app.listen(port, () => {
-    console.log(`서버 실행 중: http://localhost:${port}`);
+  console.log(`서버 연결 확인_ 포트 번호 :  ${port}`);
 });
